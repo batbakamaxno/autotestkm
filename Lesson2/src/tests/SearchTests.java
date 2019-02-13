@@ -1,8 +1,11 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.SearchPageObject;
-import org.junit.Test;
+        import lib.Platform;
+        import lib.ui.SearchPageObject;
+        import lib.ui.factories.SearchPageObjectFactory;
+        import org.junit.Test;
+
 
 public class SearchTests extends CoreTestCase
 {
@@ -11,7 +14,7 @@ public class SearchTests extends CoreTestCase
     public void testSearch()
     {
 
-        SearchPageObject SearchPageObject = new  SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
         String searchValue = "Java";
         SearchPageObject.typeSearchLine(searchValue);
@@ -20,12 +23,11 @@ public class SearchTests extends CoreTestCase
 
     }
 
-
     @Test //Ex3: Тест: отмена поиска
-    public void testEx3CancelSearch ()
+    public void testCancelSearch ()
     {
 
-        SearchPageObject  SearchPageObject = new  SearchPageObject(driver);
+        SearchPageObject  SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
         String searchValue = "Java";
         SearchPageObject.typeSearchLine(searchValue);
@@ -39,10 +41,35 @@ public class SearchTests extends CoreTestCase
         SearchPageObject.assertEmptySearchPage();
     }
 
-    @Test //Ex4*: Тест: проверка слов в поиске
-    public void testEx4WordCheck () {
+    @Test //Ex2: Создание метода.
+    public void testPresenceText ()
+    {
 
-        SearchPageObject  SearchPageObject = new  SearchPageObject(driver);
+        String expValue;
+
+        SearchPageObject  SearchPageObject = SearchPageObjectFactory.get(driver);
+        SearchPageObject.initSearchInput();
+
+        if (Platform.getInstance().isAndroid())
+        {
+
+            expValue = "Search…";
+
+        }else {
+
+            expValue = "Search Wikipedia";
+        }
+        String attribute = "name";
+        SearchPageObject.assertTextSearchLine(expValue, attribute);
+        String searchValue = "Java";
+        SearchPageObject.typeSearchLine(searchValue);
+    }
+
+    @Test //Ex4*: Тест: проверка слов в поиске
+    public void testPresenceWordsInSearch ()
+    {
+
+        SearchPageObject  SearchPageObject = SearchPageObjectFactory.get(driver);
         String searchValue = "Java";
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine(searchValue);
@@ -52,9 +79,10 @@ public class SearchTests extends CoreTestCase
     }
 
     @Test
-    public void testAmountOfNotEmptySearchResult () {
+    public void testAmountOfNotEmptySearchResult ()
+    {
 
-        SearchPageObject  SearchPageObject = new  SearchPageObject(driver);
+        SearchPageObject  SearchPageObject = SearchPageObjectFactory.get(driver);
 
         String searchValue = "Linkin Park Discography";
         SearchPageObject.initSearchInput();
@@ -66,9 +94,10 @@ public class SearchTests extends CoreTestCase
     }
 
     @Test
-    public void testAmountOfEmptySearch () {
+    public void testAmountOfEmptySearch ()
+    {
 
-        SearchPageObject  SearchPageObject = new  SearchPageObject(driver);
+        SearchPageObject  SearchPageObject = SearchPageObjectFactory.get(driver);
 
         String searchValue = "fgtyhykmbg";
         SearchPageObject.initSearchInput();
@@ -77,4 +106,30 @@ public class SearchTests extends CoreTestCase
         SearchPageObject.assertThereIsNotResultOfSearch();
 
     }
+
+    @Test// Ex9*: Рефакторинг темплейта
+    public void testSearchWithTitleAndDescription ()
+    {
+
+
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+        SearchPageObject.initSearchInput();
+        String searchValue = "black sabbath";
+        SearchPageObject.typeSearchLine(searchValue);
+
+        String arrayTitle[] = {"Black Sabbath","Black Sabbath (album)", "Black Sabbath discography" };
+        String arrayDesc[] = {"British heavy metal band", "1970 album by Black Sabbath", "Discography"};
+
+
+        for ( int i = 0; i < arrayDesc.length; i++ )
+        {
+
+            SearchPageObject.waitForElementByTitleAndDescription(arrayTitle[i],arrayDesc[i]);
+
+        }
+
+    }
+
+
+
 }

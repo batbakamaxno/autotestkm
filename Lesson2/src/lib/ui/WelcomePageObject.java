@@ -2,7 +2,8 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 
-public class WelcomePageObject extends  MainPageObject {
+public class WelcomePageObject extends  MainPageObject
+{
 
     private static final String STEP_LEARN_MORE_LINK = "id:Learn more about Wikipedia";
     private static final String CLICK_NEXT_BUTTON = "id:Next";
@@ -10,6 +11,7 @@ public class WelcomePageObject extends  MainPageObject {
     private static final String STEP_ADD_OR_EDIT_PREFERRED_LANGUAGES = "id:Add or edit preferred languages";
     private static final String STEP_LEARN_MORE_ABOUT_DATA_COLLECTION = "id:Learn more about data collected";
     private static final String CLICK_GET_STARTED_BUTTON = "id:Get started";
+    private static final String SKIP = "id:Skip";
 
     public WelcomePageObject(AppiumDriver driver)
     {
@@ -51,5 +53,11 @@ public class WelcomePageObject extends  MainPageObject {
     {
 
         this.waitForElementAndClick(CLICK_GET_STARTED_BUTTON, "cannot find and click 'Get started' button", 10);
+    }
+
+    public void clickSkip ()
+    {
+
+        this.waitForElementAndClick(SKIP,"cannot find element",5);
     }
 }
